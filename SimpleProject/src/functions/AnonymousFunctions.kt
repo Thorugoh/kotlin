@@ -13,4 +13,13 @@ fun main() {
 
     println(funSum(1, 2).invoke())
     println(sum)
+
+    val funcao = fun(a: Int, b: Int): Int {
+        return a + b
+    }
+
+    fun String.reversa(): String {
+        return this.reversed()
+    }
+    println("Kotlin".reversa())
 }
