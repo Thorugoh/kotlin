@@ -1,5 +1,8 @@
 package com.thorugoh
 
+import com.thorugoh.model.ExchangeRateResult
+import com.thorugoh.model.exchangeRates
+import com.thorugoh.model.orUnknown
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -19,9 +22,17 @@ fun Application.configureRouting() {
                 text = "Unable to get acronym from the current currency"
             )
 
-            val to = call.parameters["from"]?.uppercase() ?: return@get call.respondText(
+            val to = call.parameters["to"]?.uppercase() ?: return@get call.respondText(
                 status = HttpStatusCode.BadRequest,
                 text = "Unable to get acronym from the target currency"
+            )
+
+            call.respond(
+                ExchangeRateResult(
+                    from = from.orUnknown(),
+                    to = to.orUnknown(),
+                    exchangeRate = exchangeRates[from]?.get(to) ?: 0.0
+                )
             )
         }
     }
